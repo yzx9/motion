@@ -1,12 +1,27 @@
 {
   "name": "motion",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "pnpm --parallel --stream build && cpx \"packages/web-client/dist/**/*\" dist",
+    "dev:client": "pnpm --filter=./packages/web-client run dev",
+    "format": "prettier --write packages/*/src"
   },
   "keywords": [],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "lint-staged": {
+    "packages/*/src/**/*.{js,ts,css,vue}": [
+      "prettier --write",
+      "git commit"
+    ]
+  },
+  "devDependencies": {
+    "cpx2": "^6.0.0",
+    "lint-staged": "^15.0.2",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  }
 }

@@ -1,0 +1,12 @@
+{
+  "name": "@motion/api",
+  "private": true,
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@motion/i18n": "workspace:^",
+    "@motion/shared": "workspace:^",
+    "@types/qs": "^6.9.8",
+    "qs": "^6.11.2"
+  }
+}

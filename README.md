@@ -2,6 +2,13 @@
 
 Create, Share, Move with Motion.
 
+## Deployment
+
+```
+bash deployment/build.sh
+docker compose -f deployment/docker-compose.yaml up
+```
+
 ## Development
 
 Run server:

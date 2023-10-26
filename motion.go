@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"github.com/sirupsen/logrus"
+	"github.com/yzx9/motion/interface/web"
+)
 
 func main() {
-	fmt.Print("Create, Share, Move with Motion.")
+	log := logrus.WithField("topic", "main")
+	log.Fatal(web.New())
 }

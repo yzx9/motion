@@ -8,7 +8,7 @@ const PREFETCH_TOKEN = 60
 export const pinia = createPinia()
 
 export const useSessionStore = defineStore("user", () => {
-  const authed = ref(false)
+  const authed = ref(true)
   const refreshToken = ref(localStorage.getItem(KEY_REFRESH_TOKEN) ?? "")
   watch(refreshToken, (v) => localStorage.setItem(KEY_REFRESH_TOKEN, v))
 

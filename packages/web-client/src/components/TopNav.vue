@@ -14,7 +14,7 @@
     </div>
 
     <div class="topRight">
-      <svg class="icon" aria-hidden="true" @click="$router.push('/search')">
+      <svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-search"></use>
       </svg>
     </div>
@@ -27,6 +27,8 @@ export default {};
 
 <style lang="less" scoped>
 .topNav {
+  z-index: 9999;
+  position: fixed;
   background-color: #161823;
   color: #ffffff;
   width: 100%;

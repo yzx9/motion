@@ -13,6 +13,8 @@
     "@vitejs/plugin-vue": "^4.4.0",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
+    "swiper": "^11.0.3",
+    "vant": "^4.7.3",
     "vue": "^3.3.7",
     "vue-router": "^4.2.5"
   },

@@ -52,7 +52,7 @@
         </div>
         <!-- 右侧头像、点赞、评论、分享功能 -->
         <div class="tools_right">
-          <div class="tools_r_li">
+          <div class="tools_r_li" style="margin: 0.4rem 0.2rem">
             <img :src="item.tag_image" class="tag_image" />
             <!-- <i
               class="iconfont icon-jiahao tag_add"
@@ -70,7 +70,7 @@
               v-show="!item.tagFollow"
               @click="checkSubscribe(item, index)"
             >
-              <use xlink:href="#icon-jiahao"></use>
+              <use xlink:href="#icon-jiahao-copy"></use>
             </svg>
             <svg
               class="iconfont tag_dui"
@@ -82,17 +82,26 @@
               <use xlink:href="#icon-duihao"></use>
             </svg>
           </div>
-          <div class="tools_r_li" @click="changeFabulous(item, index)">
+          <div class="tools_r_li" @click="changeLike(item, index)">
             <!-- <i
               class="iconfont icon-shoucang icon_right"
               :class="item.fabulous ? 'fabulous_active' : ''"
             ></i> -->
             <svg
               class="iconfont icon_right"
+              v-show="!item.fabulous"
               aria-hidden="true"
               :class="item.fabulous ? 'fabulous_active' : ''"
             >
-              <use xlink:href="#icon-shoucang"></use>
+              <use xlink:href="#icon-icon-test"></use>
+            </svg>
+            <svg
+              class="iconfont icon_right"
+              v-show="item.fabulous"
+              aria-hidden="true"
+              :class="item.fabulous ? 'fabulous_active' : ''"
+            >
+              <use xlink:href="#icon-aixin3"></use>
             </svg>
             <div class="tools_r_num">52.1w</div>
           </div>
@@ -123,17 +132,149 @@
         </div>
       </van-swipe-item>
     </van-swipe>
+    <!-- 评论弹窗 -->
+    <van-popup
+      v-model:show="commentPop"
+      closeable
+      :overlay="true"
+      class="comment_container"
+      position="bottom"
+    >
+      <div class="comment_box">
+        <div class="comment_top">
+          12.5w条评论
+          <i class="iconfont icon-guanbi1 guanbi3" @click="closeComment"></i>
+        </div>
+        <ul class="comment_ul">
+          <div v-if="videoComment.length != 0">
+            <transition-group appear>
+              <li
+                class="comment_li"
+                v-for="(item, index) in videoComment"
+                :key="index"
+                @click="replayUser(item, index, -1)"
+              >
+                <div class="comment_author_left">
+                  <img :src="item.avatar" />
+                </div>
+                <div class="comment_author_right">
+                  <div class="comment_author_top">
+                    <div class="comment_author_name">@{{ item.nickname }}</div>
+                    <div
+                      class="icon-shoucang1_box"
+                      @click.stop="commentLove(item, index, -1)"
+                    >
+                      <div
+                        class="icon_right_change"
+                        :class="item.love_comment ? 'love_active' : ''"
+                      >
+                        <i class="iconfont icon-shoucang icon-shoucang1"></i>
+                      </div>
+                    </div>
+                    <div class="shoucang1_num">{{ item.love_count }}</div>
+                  </div>
+                  <div class="comment_author_text">
+                    {{ item.comment_content
+                    }}<span>{{ item.create_time }}</span>
+                  </div>
+                </div>
+                <div class="clear"></div>
+                <div class="comment_replay_box">
+                  <transition-group appear>
+                    <div
+                      class="comment_replay_li"
+                      v-for="(item2, index2) in item.child_comment"
+                      :key="index2"
+                      @click.stop="replayUser(item2, index, index2)"
+                    >
+                      <div class="comment_replay_left">
+                        <img :src="item2.avatar" />
+                      </div>
+                      <div class="comment_replay_right">
+                        <div class="comment_replay_top">
+                          <div class="comment_replay_name">
+                            @{{ item2.nickname }}
+                          </div>
+                          <div
+                            class="icon-shoucang1_box"
+                            @click.stop="commentLove(item2, index, index2)"
+                          >
+                            <div
+                              class="icon_right_change"
+                              :class="item2.love_comment ? 'love_active' : ''"
+                            >
+                              <!-- <i
+                                class="iconfont icon-shoucang icon-shoucang1"
+                              ></i> -->
+                              <svg
+                                style="transform: scale(0.15)"
+                                aria-hidden="true"
+                              >
+                                <use xlink:href="#icon-aixin3"></use>
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="shoucang1_num">
+                          {{ item2.love_count }}
+                        </div>
+                        <div class="comment_replay_text">
+                          <span
+                            v-if="
+                              item.user_id != item2.be_commented_user_id &&
+                              item.user_id != item2.user_id
+                            "
+                            >回复 {{ item2.be_commented_nickname }}：</span
+                          >
+                          {{ item2.comment_content }}
+                          <span>{{ item2.create_time }}</span>
+                        </div>
+                      </div>
+                      <div class="clear"></div>
+                    </div>
+                  </transition-group>
+                </div>
+              </li>
+            </transition-group>
+          </div>
+          <div class="no_message" v-if="videoComment.length == 0">
+            <i class="iconfont iconfont_style icon-zanwupinglun"></i>
+            <div class="no_message_tips">暂无评论</div>
+          </div>
+        </ul>
+      </div>
+    </van-popup>
+    <!-- 评论输入 -->
+    <div class="comment_input_box_hover"></div>
+    <div class="comment_input_box" v-show="commentPop">
+      <!--<form action="#" class="comment_form">-->
+      <input
+        :placeholder="commentPlaceholder"
+        class="comment_input"
+        v-model="comment_text"
+        ref="content"
+        @keyup.enter="checkComment"
+      />
+      <!--</form>-->
+      <div class="comment_input_right" @click="checkComment">
+        <i
+          class="iconfont icon-fasong comment_i"
+          :class="canSend ? 'comment_i_active' : ''"
+        ></i>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { Swipe, SwipeItem } from "vant";
+import { Swipe, SwipeItem, Popup } from "vant";
 let videoProcessInterval;
 
 export default {
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
+    [Popup.name]: Popup,
   },
   data() {
     let u = navigator.userAgent;
@@ -141,7 +282,7 @@ export default {
       current: 0,
       videoList: [
         {
-          url: "http://video.jishiyoo.com/3720932b9b474f51a4cf79f245325118/913d4790b8f046bfa1c9a966cd75099f-8ef4af9b34003bd0bc0261cda372521f-ld.mp4", //视频源
+          url: "http://s3jbnm16b.hd-bkt.clouddn.com/videos/The%20first%2020%20hours%20--%20how%20to%20learn%20anything%20-%20Josh%20Kaufman%20-%20TEDxCSU.mp4", //视频源
           cover: "http://oss.jishiyoo.com/images/file-1575341210559.png", //封面
           tag_image:
             "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449277018pF3XL.jpg", //作者头像
@@ -407,6 +548,7 @@ export default {
     //弹出评论窗口
     changeComment() {
       this.commentPop = true;
+      console.log("1111", this.commentPop);
       this.videoComment = [];
       this.getComment();
     },
@@ -431,7 +573,7 @@ export default {
     //改变菜单
 
     //改变收藏状态
-    changeFabulous(item, index) {
+    changeLike(item, index) {
       this.videoList[index].fabulous = !this.videoList[index].fabulous;
     },
     //展示分享弹窗
@@ -470,7 +612,6 @@ export default {
       console.log("playvideo：" + this.current);
       this.isVideoShow = false;
       this.iconPlayShow = false;
-      console.log("@@@", this.isVideoShow, this.iconPlayShow);
       this.showShareBox = false;
       video.play();
 
@@ -497,7 +638,6 @@ export default {
       //暂停\播放
       try {
         let video = document.querySelectorAll("video")[this.current];
-        console.log("pauseVideo" + this.current);
         if (this.playOrPause) {
           video.pause();
           this.iconPlayShow = true;
@@ -547,12 +687,6 @@ export default {
       oInput.style.display = "none";
       alert("链接复制成功");
     },
-    onSwiper(swiper) {
-      console.log("onSwiper");
-    },
-    onSlideChange() {
-      console.log("onSlideChange");
-    },
   },
 };
 </script>
@@ -564,6 +698,7 @@ export default {
   fill: currentColor;
   overflow: hidden;
 }
+
 .video_container {
   position: relative;
 }
@@ -642,7 +777,7 @@ video {
 
 .tag_add {
   position: absolute;
-  bottom: 12px;
+  top: 0.85rem;
   left: 0;
   right: 0;
   border-radius: 67px;
@@ -653,13 +788,13 @@ video {
   margin: 0 auto;
   z-index: 1;
   font-size: 20px;
-  color: #f44;
-  background: #fff;
+  color: #fff;
+  background: #f44;
 }
 
 .tag_dui {
   position: absolute;
-  bottom: 12px;
+  top: 0.85rem;
   left: 0;
   right: 0;
   border-radius: 67px;
@@ -717,11 +852,11 @@ video {
   position: relative;
   float: right;
   right: 0.2rem;
-  top: 5rem;
+  top: 3rem;
 }
 
 .tools_r_li {
-  margin: 0.2rem;
+  margin: 0.3rem 0.2rem;
   color: #fff;
   font-size: 14px;
   position: relative;
@@ -732,13 +867,38 @@ video {
 }
 
 .icon_right {
-  margin-bottom: 0.05rem;
+  margin-bottom: 0.2rem;
   width: 1rem;
   height: 0.8rem;
   font-size: 42px;
   display: block;
   text-shadow: 0px 0px 10px #9d9d9d;
   /*transition: .5s;*/
+}
+.fabulous_active {
+  color: #f44;
+  animation: showHeart 0.5s ease-in-out 0s;
+}
+@keyframes showHeart {
+  0% {
+    color: #f44;
+    transform: scale(1);
+  }
+
+  25% {
+    color: #fff;
+    transform: scale(0);
+  }
+
+  80% {
+    color: #f44;
+    transform: scale(1.2);
+  }
+
+  100% {
+    color: #f44;
+    transform: scale(1);
+  }
 }
 .tools_r_num {
   position: relative;
@@ -749,7 +909,7 @@ video {
   z-index: 1001;
   position: relative;
   /* right: 16px; */
-  top: 10rem;
+  top: 9.5rem;
   text-align: left;
   padding: 0 0.3rem 0.3rem 0.3rem;
   color: #fff;
@@ -778,4 +938,237 @@ video {
   min-height: 62px;
   font-size: 13px;
 }
+/* 评论的样式 */
+::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+:-moz-placeholder {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+.comment_container {
+  height: 50%;
+  background-color: #fff;
+  bottom: 0rem;
+  width: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  position: absolute;
+}
+
+.comment_box {
+  padding: 0 15px 52px 15px;
+}
+
+.comment_top {
+  text-align: center;
+  font-size: 12px;
+  color: #000;
+  line-height: 40px;
+}
+
+.guanbi3 {
+  float: right;
+  font-size: 12px;
+  padding: 0 10px;
+  position: absolute;
+  right: 6px;
+}
+
+.comment_li {
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.comment_author_left {
+  float: left;
+}
+
+.comment_author_left img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.comment_author_right {
+  margin-left: 46px;
+  padding-top: 4px;
+}
+
+.comment_author_top {
+  position: relative;
+}
+
+.comment_author_name {
+  margin-bottom: 6px;
+  color: #777;
+}
+
+.icon-shoucang1_box {
+  position: absolute;
+  width: 0.4rem;
+  height: 0.4rem;
+  left: 1.9rem;
+  top: -1.3rem;
+  text-align: center;
+  color: #777;
+}
+
+.comment_author_text {
+  color: #555;
+  margin-bottom: 10px;
+  padding-right: 35px;
+}
+
+.comment_replay_box {
+  padding-left: 46px;
+  box-sizing: border-box;
+}
+
+.comment_replay_li {
+  margin-bottom: 10px;
+}
+
+.comment_replay_left {
+  float: left;
+}
+
+.comment_replay_left img {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+.comment_replay_right {
+  margin-left: 35px;
+  padding-top: 2px;
+}
+
+.comment_replay_top {
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.comment_replay_text {
+  padding-right: 35px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.comment_author_text span,
+.comment_replay_text span {
+  color: #999;
+  font-size: 13px;
+}
+
+.shoucang1_num {
+  text-align: center;
+  width: 30px;
+  font-size: 12px;
+  /* right: -4px; */
+  position: relative;
+  float: right;
+  bottom: 0.2rem;
+  right: 0.3rem;
+}
+
+.comment_ul {
+  height: 400px;
+  overflow-y: auto;
+}
+
+.comment_input_box {
+  position: fixed;
+  bottom: 0;
+  z-index: 2999;
+  width: 100%;
+  border-top: 1px solid #e8e8e8;
+  background: #fff;
+  padding: 10px 15px;
+  box-sizing: border-box;
+}
+
+/*.comment_form {*/
+/**/
+/*}*/
+
+.comment_input {
+  border: none;
+  resize: none;
+  width: 80%;
+  float: left;
+  color: #555;
+  caret-color: #f44;
+  line-height: 0.44rem;
+}
+
+.comment_input_right {
+  float: right;
+}
+
+.comment_i {
+  font-size: 22px;
+  color: #999;
+  transition: 0.3s;
+}
+
+.comment_i_active {
+  color: #f44;
+}
+
+.icon-zanwupinglun {
+  font-size: 100px;
+  color: #777;
+}
+
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(80px);
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.5s ease;
+}
+
+/*添加进场效果*/
+.v-move {
+  transition: all 1s ease;
+}
+
+.v-leave-active {
+  position: absolute;
+}
+
+.list-complete-item {
+  transition: all 1s;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.list-complete-enter,
+.list-complete-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.list-complete-leave-active {
+  position: absolute;
+}
+
+.love_active {
+  color: #f44;
+}
+/* 评论的样式 */
 </style>

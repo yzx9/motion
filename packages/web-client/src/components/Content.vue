@@ -137,13 +137,22 @@
       v-model:show="commentPop"
       closeable
       :overlay="true"
+      :lock-scroll="false"
       class="comment_container"
       position="bottom"
     >
       <div class="comment_box">
         <div class="comment_top">
           12.5w条评论
-          <i class="iconfont icon-guanbi1 guanbi3" @click="closeComment"></i>
+          <!-- <svg
+            style="transform: scale(0.1)"
+            aria-hidden="true"
+            class="guanbi3"
+            @click="closeComment"
+          >
+            <use xlink:href="#icon-guanbi"></use>
+          </svg> -->
+          <!-- <i class="iconfont icon-guanbi1 guanbi3" @click="closeComment"></i> -->
         </div>
         <ul class="comment_ul">
           <div v-if="videoComment.length != 0">
@@ -162,17 +171,30 @@
                     <div class="comment_author_name">@{{ item.nickname }}</div>
                     <div
                       class="icon-shoucang1_box"
+                      style="left: 2.56rem"
                       @click.stop="commentLove(item, index, -1)"
                     >
                       <div
+                        v-show="item.love_comment"
                         class="icon_right_change"
                         :class="item.love_comment ? 'love_active' : ''"
                       >
-                        <i class="iconfont icon-shoucang icon-shoucang1"></i>
+                        <svg style="transform: scale(0.15)" aria-hidden="true">
+                          <use xlink:href="#icon-aixin3"></use>
+                        </svg>
+                      </div>
+                      <div
+                        v-show="!item.love_comment"
+                        class="icon_right_change"
+                        :class="item.love_comment ? 'love_active' : ''"
+                      >
+                        <svg style="transform: scale(0.15)" aria-hidden="true">
+                          <use xlink:href="#icon-aixin3-copy"></use>
+                        </svg>
                       </div>
                     </div>
-                    <div class="shoucang1_num">{{ item.love_count }}</div>
                   </div>
+                  <div class="shoucang1_num">{{ item.love_count }}</div>
                   <div class="comment_author_text">
                     {{ item.comment_content
                     }}<span>{{ item.create_time }}</span>
@@ -200,17 +222,28 @@
                             @click.stop="commentLove(item2, index, index2)"
                           >
                             <div
+                              v-show="item2.love_comment"
                               class="icon_right_change"
                               :class="item2.love_comment ? 'love_active' : ''"
                             >
-                              <!-- <i
-                                class="iconfont icon-shoucang icon-shoucang1"
-                              ></i> -->
                               <svg
                                 style="transform: scale(0.15)"
                                 aria-hidden="true"
                               >
                                 <use xlink:href="#icon-aixin3"></use>
+                              </svg>
+                            </div>
+
+                            <div
+                              v-show="!item2.love_comment"
+                              class="icon_right_change"
+                              :class="item2.love_comment ? 'love_active' : ''"
+                            >
+                              <svg
+                                style="transform: scale(0.15)"
+                                aria-hidden="true"
+                              >
+                                <use xlink:href="#icon-aixin3-copy"></use>
                               </svg>
                             </div>
                           </div>
@@ -257,17 +290,21 @@
       />
       <!--</form>-->
       <div class="comment_input_right" @click="checkComment">
-        <i
+        <!-- <i
           class="iconfont icon-fasong comment_i"
           :class="canSend ? 'comment_i_active' : ''"
-        ></i>
+        ></i> -->
+        <svg style="transform: scale(0.18)" aria-hidden="true">
+          <use xlink:href="#icon-fasong"></use>
+        </svg>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Swipe, SwipeItem, Popup } from "vant";
+import { Swipe, SwipeItem, Popup, showToast } from "vant";
+import "vant/es/toast/style";
 let videoProcessInterval;
 
 export default {
@@ -275,6 +312,7 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     [Popup.name]: Popup,
+    [showToast.name]: showToast,
   },
   data() {
     let u = navigator.userAgent;
@@ -452,7 +490,11 @@ export default {
     //检测评论内容
     checkComment() {
       if (this.comment_text == "") {
-        Toast("评论内容不能为空");
+        showToast({
+          message: "评论内容不能为空！",
+          className: showToast,
+          duration: 1000,
+        });
       } else {
         let comment_id = 0,
           p_id = "",
@@ -971,17 +1013,18 @@ video {
 
 .comment_top {
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   color: #000;
   line-height: 40px;
+  margin-bottom: 0.2rem;
 }
 
 .guanbi3 {
   float: right;
   font-size: 12px;
-  padding: 0 10px;
   position: absolute;
-  right: 6px;
+  left: 4rem;
+  top: -1.05rem;
 }
 
 .comment_li {
@@ -1089,7 +1132,7 @@ video {
 
 .comment_input_box {
   position: fixed;
-  bottom: 0;
+  bottom: 0.2rem;
   z-index: 2999;
   width: 100%;
   border-top: 1px solid #e8e8e8;
@@ -1105,7 +1148,8 @@ video {
 .comment_input {
   border: none;
   resize: none;
-  width: 80%;
+  padding: 0 0.2rem;
+  width: 90%;
   float: left;
   color: #555;
   caret-color: #f44;
@@ -1114,6 +1158,9 @@ video {
 
 .comment_input_right {
   float: right;
+  position: absolute;
+  bottom: -1rem;
+  left: 4rem;
 }
 
 .comment_i {
@@ -1171,4 +1218,11 @@ video {
   color: #f44;
 }
 /* 评论的样式 */
+
+.showToast {
+  z-index: 9999;
+  position: absolute;
+  left: 5px;
+  bottom: 100px;
+}
 </style>

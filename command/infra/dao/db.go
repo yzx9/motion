@@ -25,7 +25,7 @@ var (
 	logger = logrus.WithField("domain", "infra/dao")
 )
 
-const MYSQL_DSN = "" // TODO: change to config
+const MYSQL_DSN = "root:root@(127.0.0.1:3306)/motion?charset=utf8mb4&parseTime=True&loc=Local" // TODO: change to config
 
 func init() {
 	sql.Register("mysql-logrus", sqlhooks.Wrap(&mysql.MySQLDriver{}, &logrusHook{logger}))

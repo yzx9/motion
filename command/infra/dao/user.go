@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/yzx9/motion/domain/user/adpter/dto"
+	"github.com/yzx9/motion/command/domain/user/adpter/dto"
 )
 
 // PO
@@ -15,6 +15,7 @@ type user struct {
 	Nickname string    `db:"nickname"`
 	Avatar   string    `db:"avatar"`
 	Mobile   string    `db:"mobile"`
+	Password string    `db:"password"`
 	CreateAt time.Time `db:"create_at"` // DB handled
 	UpdateAt time.Time `db:"update_at"` // DB handled
 }

@@ -9,18 +9,18 @@
       <van-swipe-item
         v-for="(item, index) in videoList"
         :key="index"
-        class="product_swiper"
+        class="w-screen relative"
       >
-        <div class="video_container">
+        <div class="w-full h-full relative overflow-hidden">
           <!--video属性
-                    webkit-playsinline ios 小窗播放，使视频不脱离文本流，安卓则无效
-                    微信内置x5内核，
-                    x5-video-player-type="h5-page" 启用H5播放器,是wechat安卓版特性，添加此属性，微信浏览器会自动将视频置为全屏
-                    x5-video-player-fullscreen="true" 全屏设置，设置为 true 是防止横屏
-                    x5-video-orientation 控制横竖屏 landscape 横屏，portrain竖屏； 默认portrain
-                    poster：封面video_container
-                    src：播放地址
-                    -->
+            webkit-playsinline ios 小窗播放，使视频不脱离文本流，安卓则无效
+            微信内置x5内核，
+            x5-video-player-type="h5-page" 启用H5播放器,是wechat安卓版特性，添加此属性，微信浏览器会自动将视频置为全屏
+            x5-video-player-fullscreen="true" 全屏设置，设置为 true 是防止横屏
+            x5-video-orientation 控制横竖屏 landscape 横屏，portrain竖屏； 默认portrain
+            poster：封面video_container
+            src：播放地址
+          -->
           <video
             class="video_box"
             loop
@@ -37,21 +37,24 @@
             <source :src="item.url" type="video/mp4" />
             ;
           </video>
+
           <!-- 封面 -->
           <img
             v-show="isVideoShow"
             class="play"
-            @click="playvideo"
+            @click="playVideo"
             :src="item.cover"
           />
+
           <!-- 播放暂停按钮 -->
           <img
             v-show="iconPlayShow"
             class="icon_play"
-            @click="playvideo"
+            @click="playVideo"
             src="http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575340653940esdHR.png"
           />
         </div>
+
         <!-- 右侧头像、点赞、评论、分享功能 -->
         <div class="tools_right">
           <div class="tools_r_li" style="margin: 0.4rem 0.2rem">
@@ -62,10 +65,11 @@
               @click="checkSubscribe(item, index)"
             ></i>
             <i
-              class="iconfont icon-duihao tag_dui"
+              class="iconfont icon-duihao tag_dui absolute left-0 right-0"
               v-show="item.tagFollow"
               :class="item.tagFollow ? 'tag_dui_active' : ''"
             ></i> -->
+
             <svg
               class="iconfont tag_add"
               aria-hidden="true"
@@ -74,8 +78,9 @@
             >
               <use xlink:href="#icon-jiahao-copy"></use>
             </svg>
+
             <svg
-              class="iconfont tag_dui"
+              class="iconfont tag_dui absolute left-0 right-0"
               aria-hidden="true"
               v-show="item.tagFollow"
               :class="item.tagFollow ? 'tag_dui_active' : ''"
@@ -84,6 +89,7 @@
               <use xlink:href="#icon-duihao"></use>
             </svg>
           </div>
+
           <div class="tools_r_li" @click="changeLike(item, index)">
             <!-- <i
               class="iconfont icon-shoucang icon_right"
@@ -97,6 +103,7 @@
             >
               <use xlink:href="#icon-icon-test"></use>
             </svg>
+
             <svg
               class="iconfont icon_right"
               v-show="item.fabulous"
@@ -105,8 +112,10 @@
             >
               <use xlink:href="#icon-aixin3"></use>
             </svg>
+
             <div class="tools_r_num">52.1w</div>
           </div>
+
           <div class="tools_r_li" @click="changeComment">
             <!-- <i class="iconfont icon-liuyan icon_right icon_right_change"></i> -->
             <svg
@@ -115,25 +124,30 @@
             >
               <use xlink:href="#icon-liuyan"></use>
             </svg>
+
             <div class="tools_r_num">12.5w</div>
           </div>
+
           <div class="tools_r_li" @click="changeShare">
             <!-- <i class="iconfont icon-iconfontforward icon_right"></i> -->
             <svg class="iconfont icon_right" aria-hidden="true">
               <use xlink:href="#icon-zhuanfa"></use>
             </svg>
+
             <div class="tools_r_num">22.2w</div>
           </div>
         </div>
         <!-- 底部作品描述 -->
         <div class="production_box">
-          <div class="production_name">@{{ item.author }}</div>
+          <div class="production_name font-bold">@{{ item.author }}</div>
+
           <div class="production_des">
             {{ item.des }}
           </div>
         </div>
       </van-swipe-item>
     </van-swipe>
+
     <!-- 评论弹窗 -->
     <van-popup
       v-model:show="commentPop"
@@ -156,6 +170,7 @@
           </svg> -->
           <!-- <i class="iconfont icon-guanbi1 guanbi3" @click="closeComment"></i> -->
         </div>
+
         <ul class="comment_ul">
           <div v-if="videoComment.length != 0">
             <transition-group appear>
@@ -168,9 +183,11 @@
                 <div class="comment_author_left">
                   <img :src="item.avatar" />
                 </div>
+
                 <div class="comment_author_right">
-                  <div class="comment_author_top">
+                  <div class="relative">
                     <div class="comment_author_name">@{{ item.nickname }}</div>
+
                     <div
                       class="icon-shoucang1_box"
                       style="left: 2.56rem"
@@ -185,6 +202,7 @@
                           <use xlink:href="#icon-aixin3"></use>
                         </svg>
                       </div>
+
                       <div
                         v-show="!item.love_comment"
                         class="icon_right_change"
@@ -196,13 +214,17 @@
                       </div>
                     </div>
                   </div>
+
                   <div class="shoucang1_num">{{ item.love_count }}</div>
+
                   <div class="comment_author_text">
                     {{ item.comment_content
                     }}<span>{{ item.create_time }}</span>
                   </div>
                 </div>
+
                 <div class="clear"></div>
+
                 <div class="comment_replay_box">
                   <transition-group appear>
                     <div
@@ -214,11 +236,13 @@
                       <div class="comment_replay_left">
                         <img :src="item2.avatar" />
                       </div>
+
                       <div class="comment_replay_right">
                         <div class="comment_replay_top">
                           <div class="comment_replay_name">
                             @{{ item2.nickname }}
                           </div>
+
                           <div
                             class="icon-shoucang1_box"
                             @click.stop="commentLove(item2, index, index2)"
@@ -250,9 +274,11 @@
                             </div>
                           </div>
                         </div>
+
                         <div class="shoucang1_num">
                           {{ item2.love_count }}
                         </div>
+
                         <div class="comment_replay_text">
                           <span
                             v-if="
@@ -265,6 +291,7 @@
                           <span>{{ item2.create_time }}</span>
                         </div>
                       </div>
+
                       <div class="clear"></div>
                     </div>
                   </transition-group>
@@ -272,15 +299,19 @@
               </li>
             </transition-group>
           </div>
+
           <div class="no_message" v-if="videoComment.length == 0">
             <i class="iconfont iconfont_style icon-zanwupinglun"></i>
+
             <div class="no_message_tips">暂无评论</div>
           </div>
         </ul>
       </div>
     </van-popup>
+
     <!-- 评论输入 -->
     <div class="comment_input_box_hover"></div>
+
     <div class="comment_input_box" v-show="commentPop">
       <!--<form action="#" class="comment_form">-->
       <input
@@ -290,6 +321,7 @@
         ref="content"
         @keyup.enter="checkComment"
       />
+
       <!--</form>-->
       <div class="comment_input_right" @click="checkComment">
         <!-- <i
@@ -304,69 +336,25 @@
   </div>
 </template>
 
-<script>
-import { onMounted, onUnmounted } from "vue";
-import { Swipe, SwipeItem, Popup, showToast } from "vant";
-import "vant/es/toast/style";
-let videoProcessInterval;
+<script lang="ts">
+import { api } from "@/api"
+import { Video, VideoComment } from "@motion/api"
+import { Popup, Swipe, SwipeItem, showToast } from "vant"
+import "vant/es/toast/style"
+
+let videoProcessInterval: any
 
 export default {
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     [Popup.name]: Popup,
-    [showToast.name]: showToast,
   },
   data() {
-    let u = navigator.userAgent;
+    let u = navigator.userAgent
     return {
       current: 0,
-      videoList: [
-        {
-          url: "http://s3jbnm16b.hd-bkt.clouddn.com/videos/The%20first%2020%20hours%20--%20how%20to%20learn%20anything%20-%20Josh%20Kaufman%20-%20TEDxCSU.mp4", //视频源
-          cover: "http://oss.jishiyoo.com/images/file-1575341210559.png", //封面
-          tag_image:
-            "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449277018pF3XL.jpg", //作者头像
-          fabulous: false, //是否赞过
-          tagFollow: false, //是否关注过该作者
-          author_id: 1, //作者ID
-          author: "superKM1",
-          des: "上海加油",
-        },
-        {
-          url: "http://s3jbnm16b.hd-bkt.clouddn.com/videos/%E6%8A%96%E9%9F%B3-%E8%AE%B0%E5%BD%95%E7%BE%8E%E5%A5%BD%E7%94%9F%E6%B4%BB.mp4",
-          cover: "http://oss.jishiyoo.com/images/file-1575343195934.jpg",
-          tag_image:
-            "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449298299M3V50.jpg",
-          fabulous: true, //是否赞过
-          tagFollow: false, //是否关注过该作者
-          author_id: 2, //作者ID
-          author: "superKM2",
-          des: "北京加油",
-        },
-        {
-          url: "http://s3jbnm16b.hd-bkt.clouddn.com/videos/%E6%8A%96%E9%9F%B3-%E8%AE%B0%E5%BD%95%E7%BE%8E%E5%A5%BD%E7%94%9F%E6%B4%BB_2.mp4",
-          cover: "http://oss.jishiyoo.com/images/file-1575343262684.jpg",
-          tag_image:
-            "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449277018pF3XL.jpg",
-          fabulous: false, //是否赞过
-          tagFollow: false, //是否关注过该作者
-          author_id: 1, //作者ID
-          author: "superKM3",
-          des: "武汉加油",
-        },
-        {
-          url: "http://s3jbnm16b.hd-bkt.clouddn.com/videos/%E6%8A%96%E9%9F%B3-%E8%AE%B0%E5%BD%95%E7%BE%8E%E5%A5%BD%E7%94%9F%E6%B4%BB_3.mp4",
-          cover: "http://oss.jishiyoo.com/images/file-1575343508574.jpg",
-          tag_image:
-            "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449277018pF3XL.jpg",
-          fabulous: false, //是否赞过
-          tagFollow: false, //是否关注过该作者
-          author_id: 1, //作者ID
-          author: "superKM4",
-          des: "广州加油",
-        },
-      ],
+      videoList: [] as Video[],
       isVideoShow: true,
       playOrPause: true,
       video: null,
@@ -378,118 +366,70 @@ export default {
       // 评论相关
       comment_text: "", //评论输入内容
       canSend: false, //是否可以发送
-      videoComment: [],
+      videoComment: [] as VideoComment[],
       commentPlaceholder: "留下你精彩的评论吧", //评论Placeholder
       replayUserData: "",
       to_comment_id: "",
       videoProcess: 0, //视频播放进度
-    };
+    }
   },
   watch: {
     //监听输入变化
     comment_text(newV, oldV) {
-      newV == "" ? (this.canSend = false) : (this.canSend = true);
+      newV == "" ? (this.canSend = false) : (this.canSend = true)
     },
   },
   mounted() {
     //获取到视频资源后默认自动播放
     setTimeout(() => {
-      this.playvideo();
-    }, 500);
+      this.playVideo()
+    }, 500)
+
+    api.video.list().then((a) => (this.videoList = a))
   },
   methods: {
     //获取评论
-    getComment() {
+    async getComment() {
       //setTimeout模拟Ajax请求
-      setTimeout(() => {
-        let data = [
-          {
-            comment_id: 297,
-            p_id: 0,
-            comment_content: "你好，我叫蓝湛",
-            love_count: 0,
-            create_time: "1月前",
-            user_id: 78634,
-            nickname: "蓝忘机\uD83C\uDF1F",
-            avatar:
-              "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449277018pF3XL.jpg",
-            be_commented_user_id: 0,
-            be_commented_nickname: "",
-            be_commented_avatar: "",
-            child_comment: [
-              {
-                comment_id: 298,
-                p_id: 296,
-                comment_content: "蓝二公子，今天天气不错",
-                love_count: 1,
-                create_time: "7天前",
-                user_id: 55163,
-                nickname: "魏婴",
-                avatar:
-                  "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKPJb1k8zia02PjVibdaDJ83JIDGm0hIsY34kAlXyZMT6FMBibdw6rhdPPjpxtp6d8B75x5Kpicxp2gqw/132",
-                be_commented_user_id: 78480,
-                be_commented_nickname: "chenchen",
-                be_commented_avatar:
-                  "http://thirdwx.qlogo.cn/mmopen/vi_32/icxHc0Ym1p4hQAFAUnjpxDPMkEUyojnibBj9wUSS2OmibiazdBAicSLpoicricVYP6QG6XicjTzQPx9koMPqcGfhTOy5qA/132",
-                love_comment: true,
-              },
-            ],
-            love_comment: false,
-          },
-          {
-            comment_id: 281,
-            p_id: 0,
-            comment_content: "楼主好帅，我要嫁给你！！",
-            love_count: 0,
-            create_time: "1月前",
-            user_id: 74164,
-            nickname: "冰雪奇缘2",
-            avatar:
-              "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449298299M3V50.jpg",
-            be_commented_user_id: 0,
-            be_commented_nickname: "",
-            be_commented_avatar: "",
-            child_comment: [],
-            love_comment: false,
-          },
-        ]; //获取评论数据
-        this.videoComment = [...this.videoComment, ...data];
-        let to_comment_id = this.to_comment_id;
-        if (to_comment_id != 0) {
-          //从评论列表进来回复
-          this.getCommentDetail(to_comment_id);
-        }
-      }, 500);
+      const data = await api.video.getComment("") //获取评论数据
+      this.videoComment = [...this.videoComment, ...data]
+      let to_comment_id = this.to_comment_id
+      if (to_comment_id != 0) {
+        //从评论列表进来回复
+        this.getCommentDetail(to_comment_id)
+      }
     },
+
     //获取单个评论
     getCommentDetail(to_comment_id) {
       let obj = {
         action: "show_comment_info",
         comment_id: to_comment_id,
-      };
+      }
       setTimeout(() => {
-        let index;
-        let item = res.data;
+        let index: number
+        let item = res.data
         this.videoComment.map((v, i) => {
           v.child_comment.map((v2, i2) => {
             if (v2.comment_id == to_comment_id) {
-              index = i;
+              index = i
             }
-          });
-        });
+          })
+        })
         setTimeout(() => {
           //对评论重新排序，存在to_comment_id的时候排至第一个
-          let firstComment = this.videoComment.splice(index, 1);
-          this.videoComment.unshift(firstComment[0]);
+          let firstComment = this.videoComment.splice(index, 1)
+          this.videoComment.unshift(firstComment[0])
           //重设回复人
-          item.index = 0;
-          item.index2 = 0;
-          this.replayUserData = item;
-          this.commentPlaceholder = `回复 @${item.nickname}：`;
-          this.$refs.content.focus();
-        }, 10);
-      }, 500);
+          item.index = 0
+          item.index2 = 0
+          this.replayUserData = item
+          this.commentPlaceholder = `回复 @${item.nickname}：`
+          this.$refs.content.focus()
+        }, 10)
+      }, 500)
     },
+
     //检测评论内容
     checkComment() {
       if (this.comment_text == "") {
@@ -497,24 +437,25 @@ export default {
           message: "评论内容不能为空！",
           className: showToast,
           duration: 1000,
-        });
+        })
       } else {
         let comment_id = 0,
           p_id = "",
           p_user_id = "",
-          content = this.comment_text;
+          content = this.comment_text
         if (this.replayUserData != "") {
-          comment_id = this.replayUserData.comment_id;
-          p_id = this.replayUserData.p_id;
-          p_user_id = this.replayUserData.user_id;
+          comment_id = this.replayUserData.comment_id
+          p_id = this.replayUserData.p_id
+          p_user_id = this.replayUserData.user_id
         }
-        this.sendComment(comment_id, p_id, p_user_id, content);
+        this.sendComment(comment_id, p_id, p_user_id, content)
       }
     },
+
     //发送评论
     sendComment(comment_id, p_id, p_user_id, content) {
-      this.comment_text = "";
-      this.isSending = true;
+      this.comment_text = ""
+      this.isSending = true
       setTimeout(() => {
         let newData = {
           comment_id: comment_id,
@@ -527,217 +468,244 @@ export default {
           avatar: "https://profile.csdnimg.cn/B/1/E/3_ridingfish", //当前用户头像
           be_commented_user_id: this.replayUserData.user_id,
           be_commented_nickname: this.replayUserData.nickname,
-        };
+        }
         if (this.replayUserData == "") {
           //回复作品
-          this.videoComment.splice(0, 0, newData);
+          this.videoComment.splice(0, 0, newData)
         } else {
-          let index = this.replayUserData.index;
-          let index2 = this.replayUserData.index2;
+          let index = this.replayUserData.index
+          let index2 = this.replayUserData.index2
           if (this.replayUserData.index2 == -1) {
             //回复一级人
-            this.videoComment[index].child_comment.splice(0, 0, newData);
+            this.videoComment[index].child_comment.splice(0, 0, newData)
           } else {
             //回复二级人
-            this.videoComment[index].child_comment.splice(index2, 0, newData);
+            this.videoComment[index].child_comment.splice(index2, 0, newData)
           }
         }
-        this.replayUserData = "";
-        this.isSending = false;
-      }, 500);
+        this.replayUserData = ""
+        this.isSending = false
+      }, 500)
     },
+
     //评论点赞
     commentLove(item, index, index2) {
       let comment_id = item.comment_id,
         user_id = item.user_id,
         love_comment = item.love_comment,
-        love_flag = 0; //0:取消点赞；1：点赞
+        love_flag = 0 //0:取消点赞；1：点赞
       if (love_comment) {
         //取消点赞
-        love_flag = 0;
+        love_flag = 0
       } else {
         //添加点赞
-        love_flag = 1;
+        love_flag = 1
       }
       //setTimeout模拟Ajax请求
       setTimeout(() => {
         if (index2 == -1) {
           //点赞一级评论
           this.videoComment[index].love_comment =
-            !this.videoComment[index].love_comment;
+            !this.videoComment[index].love_comment
           if (love_flag == 1) {
-            this.videoComment[index].love_count++;
+            this.videoComment[index].love_count++
           } else {
-            this.videoComment[index].love_count--;
+            this.videoComment[index].love_count--
           }
         } else {
           //点赞二级评论
           this.videoComment[index].child_comment[index2].love_comment =
-            !this.videoComment[index].child_comment[index2].love_comment;
+            !this.videoComment[index].child_comment[index2].love_comment
           if (love_flag == 1) {
-            this.videoComment[index].child_comment[index2].love_count++;
+            this.videoComment[index].child_comment[index2].love_count++
           } else {
-            this.videoComment[index].child_comment[index2].love_count--;
+            this.videoComment[index].child_comment[index2].love_count--
           }
         }
-      }, 500);
+      }, 500)
     },
+
     //点击回复
     replayUser(item, index, index2) {
-      item.index = index;
-      item.index2 = index2;
-      this.replayUserData = item;
-      this.commentPlaceholder = `回复 @${item.nickname}：`;
-      this.$refs.content.focus();
+      item.index = index
+      item.index2 = index2
+      this.replayUserData = item
+      this.commentPlaceholder = `回复 @${item.nickname}：`
+      this.$refs.content.focus()
     },
+
     //弹出评论窗口
     changeComment() {
-      this.commentPop = true;
-      console.log("1111", this.commentPop);
-      this.videoComment = [];
-      this.getComment();
+      this.commentPop = true
+      console.log("1111", this.commentPop)
+      this.videoComment = []
+      this.getComment()
     },
+
     //关闭评论弹窗
     closeComment() {
-      this.commentPop = false;
-      this.commentPlaceholder = "留下你精彩的评论吧";
-      this.replayUserData = "";
+      this.commentPop = false
+      this.commentPlaceholder = "留下你精彩的评论吧"
+      this.replayUserData = ""
     },
+
     //关注该作者
     checkSubscribe(item, index) {
       this.videoList.map((v) => {
-        v.author_id == item.author_id ? (v.tagFollow = true) : "";
-      });
+        v.author_id == item.author_id ? (v.tagFollow = true) : ""
+      })
     },
+
     // 取消关注
     cancelSubscribe(item, index) {
       this.videoList.map((v) => {
-        v.author_id == item.author_id ? (v.tagFollow = false) : "";
-      });
+        v.author_id == item.author_id ? (v.tagFollow = false) : ""
+      })
     },
     //改变菜单
 
     //改变收藏状态
     changeLike(item, index) {
-      this.videoList[index].fabulous = !this.videoList[index].fabulous;
+      this.videoList[index].fabulous = !this.videoList[index].fabulous
     },
+
     //展示分享弹窗
     changeShare() {
-      this.showShareBox = true;
+      this.showShareBox = true
     },
+
     //取消分享
     cancelShare() {
-      this.showShareBox = false;
+      this.showShareBox = false
     },
+
     //滑动改变播放的视频
     onChange(index) {
       //改变的时候 暂停当前播放的视频
-      clearInterval(videoProcessInterval);
-      this.videoProcess = 0;
-      let video = document.querySelectorAll("video")[this.current];
-      video.pause();
-      this.playOrPause = false;
-      this.showShareBox = false;
-      this.current = index;
+      clearInterval(videoProcessInterval)
+      this.videoProcess = 0
+      const video = document.querySelectorAll("video")[this.current]
+      video.pause()
+      this.playOrPause = false
+      this.showShareBox = false
+      this.current = index
+
       //非ios切换直接自动播放下一个
       if (!this.isiOS) {
-        this.isVideoShow = false;
+        this.isVideoShow = false
         setTimeout(() => {
-          this.pauseVideo();
-        }, 100);
+          this.pauseVideo()
+        }, 100)
       } else {
         //ios官方禁止video自动播放，未找到合适的方法，如果您发现了，麻烦告诉我一下谢谢啦
-        this.playOrPause = true;
-        this.iconPlayShow = true;
+        this.playOrPause = true
+        this.iconPlayShow = true
       }
     },
+
     // 开始播放
-    playvideo(event) {
-      let video = document.querySelectorAll("video")[this.current];
-      console.log("playvideo：" + this.current);
-      this.isVideoShow = false;
-      this.iconPlayShow = false;
-      this.showShareBox = false;
-      video.play();
+    playVideo(event) {
+      if (import.meta.env.DEV) {
+        console.log("playvideo：" + this.current)
+      }
+
+      const video = document.querySelectorAll("video")[this.current]
+
+      this.isVideoShow = false
+      this.iconPlayShow = false
+      this.showShareBox = false
+      video.play()
 
       if (this.isiOS) {
         setTimeout(() => {
           //处理ios宽视频
-          let documentW =
-            document.documentElement.clientWidth || document.body.clientWidth;
-          let docB = parseFloat(video.videoWidth / documentW);
-          console.log("获取视频宽和屏幕比：" + docB);
+          const documentW =
+            document.documentElement.clientWidth || document.body.clientWidth
+          const docB = parseFloat(video.videoWidth / documentW)
+          if (import.meta.env.DEV) {
+            console.log("获取视频宽和屏幕比：" + docB)
+          }
+
           // 计算视频最适高度
-          let realH = parseInt(video.videoHeight / docB);
-          this.realH = realH + "px";
-          console.log("视频最适高度：" + this.realH);
-          this.$forceUpdate();
-        }, 200);
+          const realH = parseInt(video.videoHeight / docB)
+          this.realH = `${realH}px`
+          if (import.meta.env.DEV) {
+            console.log("视频最适高度：" + this.realH)
+          }
+
+          this.$forceUpdate()
+        }, 200)
       }
 
       videoProcessInterval = setInterval(() => {
-        this.changeProcess(video);
-      }, 100);
+        this.changeProcess(video)
+      }, 100)
     },
+
     pauseVideo() {
       //暂停\播放
       try {
-        let video = document.querySelectorAll("video")[this.current];
+        const video = document.querySelectorAll("video")[this.current]
         if (this.playOrPause) {
-          video.pause();
-          this.iconPlayShow = true;
-          clearInterval(videoProcessInterval);
+          video.pause()
+          this.iconPlayShow = true
+          clearInterval(videoProcessInterval)
         } else {
           // wx.ready(() => {
           //     // 在微信的ready中进行播放 不管成功配置与否 都会执行ready
           //     video.play();
           // })
-          video.play();
-          video.pause();
+          video.play()
+          video.pause()
           setTimeout(() => {
-            video.play();
-            this.iconPlayShow = false;
+            video.play()
+            this.iconPlayShow = false
             videoProcessInterval = setInterval(() => {
-              this.changeProcess(video);
-            }, 100);
-          }, 100);
+              this.changeProcess(video)
+            }, 100)
+          }, 100)
         }
-        this.playOrPause = !this.playOrPause;
-        this.showShareBox = false;
+        this.playOrPause = !this.playOrPause
+        this.showShareBox = false
       } catch (e) {
-        alert(e);
+        alert(e)
       }
     },
+
     //记录播放进度
     changeProcess() {
-      let video = document.querySelectorAll("video")[this.current];
-      let currentTime = video.currentTime.toFixed(1);
-      let duration = video.duration.toFixed(1);
-      this.videoProcess = parseInt((currentTime / duration).toFixed(2) * 100);
+      const video = document.querySelectorAll("video")[this.current]
+      const currentTime = video.currentTime.toFixed(1)
+      const duration = video.duration.toFixed(1)
+      this.videoProcess = parseInt((currentTime / duration).toFixed(2) * 100)
     },
+
     onPlayerEnded(player) {
       //视频结束
-      this.isVideoShow = true;
-      this.current += this.current;
+      this.isVideoShow = true
+      this.current += this.current
     },
+
     //复制当前链接
     copyUrl() {
-      let httpUrl = window.location.href;
-      var oInput = document.createElement("input");
-      oInput.value = httpUrl;
-      document.body.appendChild(oInput);
-      oInput.select(); // 选择对象
-      document.execCommand("Copy"); // 执行浏览器复制命令
-      oInput.className = "oInput";
-      oInput.style.display = "none";
-      alert("链接复制成功");
+      const httpUrl = window.location.href
+      const oInput = document.createElement("input")
+      oInput.value = httpUrl
+      document.body.appendChild(oInput)
+      oInput.select() // 选择对象
+      document.execCommand("Copy") // 执行浏览器复制命令
+      oInput.className = "oInput"
+      oInput.style.display = "none"
+      alert("链接复制成功")
     },
   },
+
   beforeUnmount() {
-    clearInterval(videoProcessInterval);
+    clearInterval(videoProcessInterval)
   },
-};
+}
 </script>
+
 <style scoped>
 .icon {
   width: 1rem;
@@ -749,19 +717,6 @@ export default {
 
 .video_container {
   background-color: #161823;
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-}
-.video-player {
-  height: 100vh;
-  width: 100vw;
-}
-
-.product_swiper {
-  width: 100vw;
-  position: relative;
 }
 
 .van_swipe {
@@ -853,10 +808,7 @@ video {
 }
 
 .tag_dui {
-  position: absolute;
   top: 0.85rem;
-  left: 0;
-  right: 0;
   border-radius: 67px;
   display: inline-block;
   width: 20px;
@@ -888,17 +840,20 @@ video {
     background: #f44;
     transform: rotate(-180deg) scale(1);
   }
+
   35% {
     opacity: 1;
     color: #f44;
     background: #fff;
     transform: rotate(0deg) scale(1.2);
   }
+
   80% {
     opacity: 1;
     color: #f44;
     transform: scale(1.2);
   }
+
   100% {
     opacity: 0;
     display: none;
@@ -920,10 +875,10 @@ video {
   color: #fff;
   font-size: 14px;
   position: relative;
-}
 
-.tools_r_li:last-child {
-  margin-bottom: 0px;
+  &:last-child {
+    margin-bottom: 0px;
+  }
 }
 
 .icon_right {
@@ -935,10 +890,12 @@ video {
   text-shadow: 0px 0px 10px #9d9d9d;
   /*transition: .5s;*/
 }
+
 .fabulous_active {
   color: #f44;
   animation: showHeart 0.5s ease-in-out 0s;
 }
+
 @keyframes showHeart {
   0% {
     color: #f44;
@@ -960,6 +917,7 @@ video {
     transform: scale(1);
   }
 }
+
 .tools_r_num {
   position: relative;
   right: -0.15rem;
@@ -984,7 +942,6 @@ video {
 }
 
 .production_name {
-  font-weight: 700;
   font-size: 18px;
   margin-bottom: 10px;
 }
@@ -998,6 +955,7 @@ video {
   min-height: 62px;
   font-size: 13px;
 }
+
 /* 评论的样式 */
 ::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.2);
@@ -1064,10 +1022,6 @@ video {
 .comment_author_right {
   margin-left: 46px;
   padding-top: 4px;
-}
-
-.comment_author_top {
-  position: relative;
 }
 
 .comment_author_name {
@@ -1235,6 +1189,7 @@ video {
 .love_active {
   color: #f44;
 }
+
 /* 评论的样式 */
 
 .showToast {

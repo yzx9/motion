@@ -51,6 +51,10 @@
             @click="playvideo"
             src="http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575340653940esdHR.png"
           />
+          <div
+            class="border_progress"
+            :style="'width:' + videoProcess + '%'"
+          ></div>
         </div>
         <!-- 右侧头像、点赞、评论、分享功能 -->
         <div class="tools_right">
@@ -311,6 +315,8 @@ import "vant/es/toast/style";
 let videoProcessInterval;
 
 export default {
+  props: ["videoList"],
+
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
@@ -321,52 +327,6 @@ export default {
     let u = navigator.userAgent;
     return {
       current: 0,
-      videoList: [
-        {
-          url: "http://s3jbnm16b.hd-bkt.clouddn.com/videos/The%20first%2020%20hours%20--%20how%20to%20learn%20anything%20-%20Josh%20Kaufman%20-%20TEDxCSU.mp4", //视频源
-          cover: "http://oss.jishiyoo.com/images/file-1575341210559.png", //封面
-          tag_image:
-            "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449277018pF3XL.jpg", //作者头像
-          fabulous: false, //是否赞过
-          tagFollow: false, //是否关注过该作者
-          author_id: 1, //作者ID
-          author: "superKM1",
-          des: "上海加油",
-        },
-        {
-          url: "http://s3jbnm16b.hd-bkt.clouddn.com/videos/%E6%8A%96%E9%9F%B3-%E8%AE%B0%E5%BD%95%E7%BE%8E%E5%A5%BD%E7%94%9F%E6%B4%BB.mp4",
-          cover: "http://oss.jishiyoo.com/images/file-1575343195934.jpg",
-          tag_image:
-            "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449298299M3V50.jpg",
-          fabulous: true, //是否赞过
-          tagFollow: false, //是否关注过该作者
-          author_id: 2, //作者ID
-          author: "superKM2",
-          des: "北京加油",
-        },
-        {
-          url: "http://s3jbnm16b.hd-bkt.clouddn.com/videos/%E6%8A%96%E9%9F%B3-%E8%AE%B0%E5%BD%95%E7%BE%8E%E5%A5%BD%E7%94%9F%E6%B4%BB_2.mp4",
-          cover: "http://oss.jishiyoo.com/images/file-1575343262684.jpg",
-          tag_image:
-            "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449277018pF3XL.jpg",
-          fabulous: false, //是否赞过
-          tagFollow: false, //是否关注过该作者
-          author_id: 1, //作者ID
-          author: "superKM3",
-          des: "武汉加油",
-        },
-        {
-          url: "http://s3jbnm16b.hd-bkt.clouddn.com/videos/%E6%8A%96%E9%9F%B3-%E8%AE%B0%E5%BD%95%E7%BE%8E%E5%A5%BD%E7%94%9F%E6%B4%BB_3.mp4",
-          cover: "http://oss.jishiyoo.com/images/file-1575343508574.jpg",
-          tag_image:
-            "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449277018pF3XL.jpg",
-          fabulous: false, //是否赞过
-          tagFollow: false, //是否关注过该作者
-          author_id: 1, //作者ID
-          author: "superKM4",
-          des: "广州加油",
-        },
-      ],
       isVideoShow: true,
       playOrPause: true,
       video: null,
@@ -383,6 +343,7 @@ export default {
       replayUserData: "",
       to_comment_id: "",
       videoProcess: 0, //视频播放进度
+      x: 0,
     };
   },
   watch: {
@@ -1242,5 +1203,13 @@ video {
   position: absolute;
   left: 5px;
   bottom: 100px;
+}
+.border_progress {
+  width: 0;
+  height: 2px;
+  background: #bababa;
+  position: absolute;
+  top: 15.2rem;
+  transition: 0.1s all;
 }
 </style>

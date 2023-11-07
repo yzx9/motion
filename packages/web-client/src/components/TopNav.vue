@@ -7,10 +7,18 @@
     </div>
 
     <div class="topContent">
-      <span>直播</span>
-      <span>热点</span>
-      <span>同城</span>
-      <span class="active">推荐</span>
+      <div @click="changeid(0)">
+        <span :class="currentid == 0 ? 'tab_active' : ''">直播</span>
+      </div>
+      <div @click="changeid(1)">
+        <span :class="currentid == 1 ? 'tab_active' : ''">热点</span>
+      </div>
+      <div @click="changeid(2)">
+        <span :class="currentid == 2 ? 'tab_active' : ''">同城</span>
+      </div>
+      <div @click="changeid(3)">
+        <span :class="currentid == 3 ? 'tab_active' : ''">推荐</span>
+      </div>
     </div>
 
     <div class="topRight">
@@ -22,10 +30,22 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      currentid: 3,
+    };
+  },
+  methods: {
+    changeid(id) {
+      this.currentid = id;
+      this.$emit("childByValue", this.currentid);
+    },
+  },
+};
 </script>
 
-<style lang="less" scoped>
+<style scoped>
 .topNav {
   z-index: 9999;
   position: fixed;
@@ -37,25 +57,23 @@ export default {};
   display: flex;
   justify-content: space-between;
   align-items: center;
-  .topRight {
-    .icon {
-      fill: #ffffff;
-      width: 0.5rem;
-      height: 0.5rem;
-    }
-  }
-  // less中可以样式包样式(div中也是包裹的)
-  .topContent {
-    width: 65%;
-    height: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    font-size: 0.36rem;
-    .active {
-      border-bottom: 2px solid #fff;
-      font-weight: 700;
-    }
-  }
+}
+
+.icon {
+  fill: #ffffff;
+  width: 0.5rem;
+  height: 0.5rem;
+}
+.topContent {
+  width: 65%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 0.36rem;
+}
+.tab_active {
+  border-bottom: 2px solid #fff;
+  font-weight: 700;
 }
 </style>

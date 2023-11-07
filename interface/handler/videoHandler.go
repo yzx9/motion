@@ -20,23 +20,23 @@ import (
 *@date: 2023/11/3 13:58
 *@Version: V1.0
  */
-var videoService service.VideoService
-var likeService service.LikeService
-var commentService service.CommentService
+var videoService service.VideoServiceImpl
+var likeService service.LikeServiceImpl
+var commentService service.CommentServiceImpl
 
 const (
 	dirVideo = "videos"
 )
 
 func PostVideoHandler(c *gin.Context) {
-	fileHeader, err := c.FormFile(dirVideo)
+	fileHeader, err := c.FormFile("video")
 	if err != nil {
-		response.ResponseResult(c, http.StatusBadGateway, "上传失败", nil)
+		response.ResponseResult(c, http.StatusBadGateway, "上传失败", err.Error())
 		return
 	}
 	ret, err := util.UploadFile(fileHeader, dirVideo)
 	if err != nil {
-		response.ResponseResult(c, http.StatusBadGateway, "上传失败", nil)
+		response.ResponseResult(c, http.StatusBadGateway, "上传失败", err.Error())
 		return
 	}
 	var videoDto dto.VideoDto
@@ -85,7 +85,26 @@ func LikeHandler(c *gin.Context) {
 	}
 	value, exists := c.Get("userId")
 	if !exists {
-		error2.GetMyError().AbortWithError(c, errors.New("未登录"))
+		error2.GetMyError().AbortWithError(c, errors.New("请登陆后操作"))
+	}
+	likeDto.UserId, err = strconv.Atoi(fmt.Sprintf("%v", value))
+	err = likeService.Like(&likeDto)
+	if err != nil {
+		error2.GetMyError().AbortWithError(c, err)
+		return
+	}
+}
+
+func CollectHandler(c *gin.Context) {
+	var likeDto dto.LikeDto
+	err := c.ShouldBind(&likeDto)
+	if err != nil {
+		error2.GetMyError().AbortWithError(c, err)
+		return
+	}
+	value, exists := c.Get("userId")
+	if !exists {
+		error2.GetMyError().AbortWithError(c, errors.New("请登陆后操作"))
 	}
 	likeDto.UserId, err = strconv.Atoi(fmt.Sprintf("%v", value))
 	err = likeService.Like(&likeDto)
@@ -104,7 +123,7 @@ func CommentHandler(c *gin.Context) {
 	}
 	value, exists := c.Get("userId")
 	if !exists {
-		error2.GetMyError().AbortWithError(c, errors.New("未登录"))
+		error2.GetMyError().AbortWithError(c, errors.New("请登陆后操作"))
 	}
 	commentDto.UserId, err = strconv.Atoi(fmt.Sprintf("%v", value))
 	id, err := commentService.Comment(&commentDto)
@@ -113,11 +132,10 @@ func CommentHandler(c *gin.Context) {
 		return
 	}
 	response.ResponseOk(c, "评论成功,返回评论的id", id)
-
 }
 
 func VideoCommentsHandler(c *gin.Context) {
-	videoId := c.Param("video-id")
+	videoId := c.Param("videoId")
 	id, err := strconv.ParseInt(videoId, 10, 64)
 	commentDtos, err := commentService.GetVideoComments(id)
 	if err != nil {
@@ -128,7 +146,19 @@ func VideoCommentsHandler(c *gin.Context) {
 
 }
 
-func GetVideosByRecommend(c *gin.Context) {
+func GetVideosByRecommendHandler(c *gin.Context) {
+	userId, err := GetContextUserId(c)
+
+	if err != nil {
+		error2.GetMyError().AbortWithError(c, err)
+		return
+	}
+	video, err := videoService.SelectRecommendVideos(userId)
+	if err != nil {
+		error2.GetMyError().AbortWithError(c, err)
+		return
+	}
+	response.ResponseOk(c, "recommend videos", video)
 
 }
 

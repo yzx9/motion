@@ -44,7 +44,7 @@ func InitServer() {
 	r.MaxMultipartMemory = 1 << 30
 	server = &Server{
 		engine: r,
-		addr:   ":8080",
+		addr:   "192.168.2.115:8080",
 	}
 	server.SetRouter()
 }

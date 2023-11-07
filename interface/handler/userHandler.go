@@ -19,8 +19,8 @@ import (
 *@date: 2023/11/2 19:13
 *@Version: V1.0
  */
-var userService service.UserService
-var followerService service.FollowerService
+var userService service.UserServiceImpl
+var followerService service.FollowerServiceImpl
 
 func UserLogin(c *gin.Context) {
 	var dto dto2.LoginDto
@@ -33,7 +33,8 @@ func UserLogin(c *gin.Context) {
 		error2.GetMyError().AbortWithError(c, err)
 		return
 	}
-	response.ResponseOk(c, "login success", token)
+	c.Set("userId", token)
+	c.JSON(http.StatusOK, token)
 }
 
 func UserRegister(c *gin.Context) {
@@ -88,4 +89,19 @@ func FollowHandler(c *gin.Context) {
 		error2.GetMyError().AbortWithError(c, err)
 		return
 	}
+}
+
+func getUserInfoHandler(c *gin.Context) {
+	userId, err := GetContextUserId(c)
+	if err != nil {
+		response.ResponseResult(c, 401, "未登录", err.Error())
+		return
+	}
+	dto, err := userService.GetUserInfo(userId)
+	if err != nil {
+		response.ResponseFail(c, "出错啦！", err.Error())
+		return
+	}
+	response.ResponseOk(c, "user-info", dto)
+
 }

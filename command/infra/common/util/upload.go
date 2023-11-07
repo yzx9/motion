@@ -39,7 +39,7 @@ type UploadRet struct {
 	CoverURL string
 }
 
-var videoImagExt = []string{"mp4", "flv", "mp3"}
+var videoImagExt = []string{"mp4", "flv", "jpg", "png"}
 
 func IsVail(suffix string) bool {
 	for _, fileExt := range videoImagExt {
@@ -54,13 +54,13 @@ func UploadFile(f *multipart.FileHeader, class string) (UploadRet, error) {
 	filename := f.Filename
 	index := strings.LastIndex(filename, ".")
 
-	if !IsVail(filename[index:]) {
+	if !IsVail(filename[index+1:]) {
 		return UploadRet{}, errors.New("文件格式不正确")
 	}
 	id, err := NewID()
 	uid := strconv.FormatInt(id, 10)
 	key := class + "/" + uid + filename[index:]
-	coverKey := Image + ":" + uid + "." + "jpg"
+	coverKey := bucket + ":" + Image + "/" + uid + "." + "jpg"
 	encodeURI := base64.StdEncoding.EncodeToString([]byte(coverKey))
 
 	putPolicy := storage.PutPolicy{
@@ -90,6 +90,6 @@ func UploadFile(f *multipart.FileHeader, class string) (UploadRet, error) {
 		url2,
 		id,
 		filename,
-		url + "/" + ret.PersistentID,
+		url + "/" + Image + "/" + uid + "." + "jpg",
 	}, err
 }

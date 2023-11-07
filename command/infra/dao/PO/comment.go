@@ -21,7 +21,7 @@ type Comment struct {
 	ParentId       int
 	Likes          int
 	ResponseUserId int
-	CreatTime      *time.Time
+	CreatedAt      time.Time
 }
 
 type CommentDao struct {

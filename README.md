@@ -36,3 +36,35 @@ Run client:
 pnpm install \
 && pnpm run dev:client 
 ```
+
+
+api:
+
+```
+/api/v1/user/vail/login 登录
+/api/v1/user/vail/login 注册
+/api/v1/user/getUserInfo 用户主页信息
+/api/v1/user/avatar上传头像
+
+
+groupUser2 := r.Group("/api/v1/user")
+	{
+		groupUser2.GET("/getUserInfo", handler.UploadAvatar)
+		groupUser2.POST("/upload/avatar", handler.UploadAvatar)
+		groupUser2.POST("/follow", handler.FollowHandler)
+		groupUser2.POST("/like", handler.LikeHandler)
+		groupUser2.POST("/comment", handler.CommentHandler)
+		groupUser2.POST("/collect", handler.CollectHandler)
+		groupUser2.GET("/fans")
+
+	}
+
+	groupVideo := r.Group("/api/v1/video")
+	{
+		groupVideo.GET("/recommend/videos", handler.GetVideosByRecommendHandler)
+		groupVideo.GET("/getVideo/:id", handler.GetVideoByIdHandler)
+		groupVideo.GET("/getComments/:videoId", handler.VideoCommentsHandler)
+		groupVideo.POST("/uploadVideo", handler.PostVideoHandler)
+	}
+
+```

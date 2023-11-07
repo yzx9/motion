@@ -66,3 +66,47 @@ func (v VideoServiceImpl) SelectVideoByID(id int64, uid int) (dto.VideoShowDto, 
 	videShowDto.IsLike = false
 	return videShowDto, nil
 }
+
+func (v VideoServiceImpl) SelectRecommendVideos(uid int) ([]dto.VideoShowDto, error) {
+	videos, err := videoDao.SelectAllVideos()
+	if err != nil {
+		return nil, err
+	}
+	VideoRes := make([]dto.VideoShowDto, len(videos))
+	for i := 0; i < len(videos); i++ {
+		video := videos[i]
+		user, err := userDao.SelectUserById(video.UserId)
+		if err != nil {
+			return nil, err
+		}
+		var videoDto dto.VideoDto
+		err = copier.Copy(&videoDto, &video)
+		if err != nil {
+			return nil, err
+		}
+		var videShowDto dto.VideoShowDto
+		err = copier.Copy(&videShowDto, &user)
+		if err != nil {
+			return nil, err
+		}
+		err = copier.Copy(&videShowDto, &video)
+		if err != nil {
+			return nil, err
+		}
+		videShowDto.Video = videoDto
+		followed, err := followDao.SelectByUserIdAndFollowerId(uid, videShowDto.UserId)
+		if err == nil {
+			videShowDto.IsFollow = followed.IsFollow
+		}
+		videShowDto.IsFollow = false
+		like, err := likeDao.SelectByUserIdAndLikeVideoId(uid, videShowDto.Video.Id)
+		if err == nil {
+			videShowDto.IsLike = like.IsLike
+		}
+		fmt.Println(err.Error())
+		videShowDto.IsLike = false
+		VideoRes[i] = videShowDto
+	}
+
+	return VideoRes, nil
+}

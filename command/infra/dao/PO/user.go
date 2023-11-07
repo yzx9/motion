@@ -26,6 +26,7 @@ type User struct {
 	Fans      int    `gorm:"type:int"`
 	Followers int    `gorm:"type:int"`
 	Likes     int    `gorm:"type:int"`
+	Collects  int    `gorm:"type:int"`
 	Friends   int    `gorm:"type:int"`
 }
 

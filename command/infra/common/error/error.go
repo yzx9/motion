@@ -1,6 +1,9 @@
 package error
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/yzx9/motion/command/infra/common/response"
+)
 
 /**
 *@Description:
@@ -18,8 +21,8 @@ func GetMyError() *MyError {
 	return myError
 }
 
-func (e MyError) AbortWithError(c *gin.Context, err error) *gin.Error {
+func (e MyError) AbortWithError(c *gin.Context, err error) {
 	gEr := c.Error(err)
 	c.Abort()
-	return gEr
+	response.ResponseFail(c, "发生错误", gEr.Error())
 }

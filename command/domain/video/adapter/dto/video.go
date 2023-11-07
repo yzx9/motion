@@ -41,5 +41,6 @@ type VideoShowDto struct {
 	IsFollow bool     `json:"is-follow"`
 	Likes    int      `json:"likes"`
 	Comments int      `json:"comments"`
+	Collects int      `json:"collects"`
 	Forwards int      `json:"forwards"`
 }

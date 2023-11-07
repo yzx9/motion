@@ -14,15 +14,15 @@ import (
  */
 
 type CommentDto struct {
-	UserId     int
-	UserName   string `json:"user-name" form:"user-name"`
-	VideoId    int64  `json:"video-id,omitempty" form:"video-id"`
-	Content    string `json:"content" form:"content"`
-	Level      int8   `json:"level" form:"level"`
-	ParentId   int    `json:"parent-id" form:"parent-id"`
-	Likes      int    `json:"likes" form:"likes"`
-	IsLike     bool   `json:"is-like,omitempty" form:"is-like"`
-	CreateTime *time.Time
+	UserId    int
+	UserName  string `json:"user-name" form:"user-name"`
+	VideoId   int64  `json:"video-id,omitempty" form:"video-id"`
+	Content   string `json:"content" form:"content"`
+	Level     int8   `json:"level" form:"level"`
+	ParentId  int    `json:"parent-id" form:"parent-id"`
+	Likes     int    `json:"likes" form:"likes"`
+	IsLike    bool   `json:"is-like,omitempty" form:"is-like"`
+	CreatedAt time.Time
 }
 
 func (dto *CommentDto) ToComment(uu *PO.Comment) error {

@@ -3,10 +3,12 @@ import { Tokens } from "./session"
 
 export type User = {
   id: string
-  name: string
-  avatar: string
-  avatarUrl: string
-  mobile: string
+  nickname: string
+  des: string
+  avatarURL: string
+  fan: number
+  follow: number
+  videos: { img: string }[]
 }
 
 export type UserSMS = {
@@ -22,7 +24,7 @@ export type FormUser = {
 }
 
 export class UserAPI extends Module {
-  /*
+  /**
    * user
    */
 
@@ -37,13 +39,27 @@ export class UserAPI extends Module {
     return this.api.put(`/users/${user.id}`, user)
   }
 
-  /*
+  /**
    * current user
    */
 
   async getCurrent(): Promise<User> {
-    return await this.api.get("/users/current")
+    // return await this.api.get("/users/current")
+
+    return {
+      id: "fake",
+      nickname: "张波123",
+      des: "成分复杂，无法简介",
+      avatarURL:
+        "http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575449277018pF3XL.jpg",
+      fan: 222,
+      follow: 102,
+      videos: new Array(10).fill(0).map((_) => ({
+        img: "https://fastly.jsdelivr.net/npm/@vant/assets/apple-1.jpeg",
+      })),
+    }
   }
+
   async sendVerificationCode(
     mobile: string,
     exists: boolean = true // send even not exists if false
@@ -58,8 +74,10 @@ export class UserAPI extends Module {
 
 export const UserDefault: User = {
   id: "",
-  name: "",
-  avatar: "",
-  avatarUrl: "",
-  mobile: "",
+  nickname: "unauthed",
+  des: "",
+  avatarURL: "",
+  fan: 0,
+  follow: 0,
+  videos: [],
 }

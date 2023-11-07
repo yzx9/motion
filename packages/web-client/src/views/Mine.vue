@@ -7,7 +7,7 @@
         />
       </div>
       <div class="detail">
-        <div class="name">张波123</div>
+        <div class="name">ADMIN:123</div>
         <div class="des">成分复杂，无法简介</div>
       </div>
       <div class="wrap">

@@ -10,10 +10,29 @@
     <Bottomnav></Bottomnav>
   </div>
 </template>
-<script setup lang="ts">
+
+<script>
+import { api } from "../api";
 import Bottomnav from "../components/BottomNav.vue";
 import "vant/lib/index.css";
+export default {
+  components: {
+    Bottomnav,
+  },
+  mounted() {
+    this.login();
+  },
+  methods: {
+    login() {
+      const token = api.session.signIn("17017376601", "123456qwer");
+      token.then((res) => {
+        console.log(res);
+      });
+    },
+  },
+};
 </script>
+
 <style scoped>
 .container_box {
   width: 100vw;

@@ -7,6 +7,7 @@
   </div>
 </template>
 <script>
+import { api } from "../api";
 import Topnav from "../components/TopNav.vue";
 
 import Content from "../components/Content.vue";
@@ -66,11 +67,18 @@ export default {
       ],
     };
   },
+
+  mounted() {
+    this.getVideo();
+  },
   methods: {
+    getVideo() {
+      const token = api.session.getVideo();
+      token.then((res) => console.log(res.data));
+    },
     childByValue(childValue) {
       // childValue就是子组件传过来的值
       this.id = childValue;
-      console.log("@", this.id);
     },
   },
 };

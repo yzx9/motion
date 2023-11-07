@@ -27,4 +27,17 @@ export class SessionAPI extends Module {
   async signOut(): Promise<void> {
     await this.api.delete("/sessions")
   }
+  async signIn(mobile: string, password: string): Promise<Tokens> {
+    return await this.api.post(
+      "/v1/user/vail/login",
+      { mobile, password },
+      { withoutAuth: true }
+    )
+  }
+  async getVideo() {
+    return await this.api.get(
+      "/v1/video/recommend/videos"
+    )
+  }
 }
+

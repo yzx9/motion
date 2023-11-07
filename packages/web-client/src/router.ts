@@ -16,17 +16,17 @@ const routes: RouteRecordRaw[] = [
     children:[
       {path:'/main',
       name:'main',
-      meta:{public:true},
+      meta:{public:false},
       component:()=>import('./views/Main.vue')
     },
     {path:'/uploadvideo',
      name:'UploadVideo',
-     meta:{public:true},
+     meta:{public:false},
      component:()=>import('./views/UploadVideo.vue')
     },
     {path:'/mine',
     name:'Mine',
-    meta:{public:true},
+    meta:{public:false},
     component:()=>import('./views/Mine.vue')
    },
     ]

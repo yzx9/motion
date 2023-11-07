@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { api } from "../api";
 export default {
   data() {
     return {
@@ -40,6 +41,10 @@ export default {
     changeid(id) {
       this.currentid = id;
       this.$emit("childByValue", this.currentid);
+      const token = api.session.signIn(213, 22312);
+      token.then((res, rej) => console.log("214"));
+
+      // TODO
     },
   },
 };

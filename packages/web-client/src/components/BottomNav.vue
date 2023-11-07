@@ -1,39 +1,68 @@
 <template>
   <div class="container_bottom">
     <div class="border_progress" :style="'width:' + videoProcess + '%'"></div>
-    <div
-      class="bottom_tab"
-      :class="tabIndex == 0 ? 'tab_active' : ''"
-      @click="changeTab(0)"
-    >
-      <span class="bottom_tab_span">首页</span>
+    <div class="bottom_tab" @click="changeTab(0)">
+      <span class="bottom_tab_span" :class="tabIndex == 0 ? 'tab_active' : ''"
+        >首页</span
+      >
     </div>
-    <div
-      class="bottom_tab align-middle content-center"
-      :class="tabIndex == 1 ? 'tab_active' : ''"
-      @click="changeTab(1)"
-    >
-      <svg class="icon" aria-hidden="true">
+    <div class="bottom_tab align-middle content-center" @click="changeTab(1)">
+      <svg
+        class="icon"
+        aria-hidden="true"
+        :class="tabIndex == 1 ? 'tab_active' : ''"
+      >
         <use xlink:href="#icon-vuesax-linear-add-square"></use>
       </svg>
     </div>
-    <div
-      class="bottom_tab"
-      :class="tabIndex == 2 ? 'tab_active' : ''"
-      @click="changeTab(2)"
-    >
-      <span class="bottom_tab_span">我的</span>
+    <div class="bottom_tab" @click="changeTab(2)">
+      <span class="bottom_tab_span" :class="tabIndex == 2 ? 'tab_active' : ''"
+        >我的</span
+      >
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 let videoProcess = ref<number>(0);
 let tabIndex = ref<number>(0);
+onMounted(() => {
+  if (tabIndex.value === 0) {
+    router.push({
+      path: "main",
+    });
+  }
+  if (tabIndex.value === 1) {
+    router.push({
+      path: "uploadvideo",
+    });
+  }
+  if (tabIndex.value === 2) {
+    router.push({
+      path: "mine",
+    });
+  }
+});
 const changeTab = (index: number) => {
   tabIndex.value = index;
+  if (tabIndex.value === 0) {
+    router.push({
+      path: "main",
+    });
+  }
+  if (tabIndex.value === 1) {
+    router.push({
+      path: "uploadvideo",
+    });
+  }
+  if (tabIndex.value === 2) {
+    router.push({
+      path: "mine",
+    });
+  }
 };
 </script>
 
@@ -65,7 +94,7 @@ const changeTab = (index: number) => {
       width: 0.88rem;
     }
     & .icon {
-      fill: #ffffff;
+      fill: #c9c9c9;
       width: 0.5rem;
       height: 0.5rem;
       margin: 0 auto;
@@ -77,8 +106,12 @@ const changeTab = (index: number) => {
       font-size: 0.32rem;
       display: inline-block;
       padding: 0 0.12rem;
-      transition: 0.5s all;
+      transition: 1s all;
     }
   }
+}
+.tab_active {
+  color: #fff;
+  fill: #fff !important;
 }
 </style>

@@ -30,13 +30,11 @@
             playsinline
             preload="auto"
             :poster="item.cover"
+            :src="item.url"
             :playOrPause="playOrPause"
             @click="pauseVideo"
             @ended="onPlayerEnded($event)"
-          >
-            <source :src="item.url" type="video/mp4" />
-            ;
-          </video>
+          ></video>
           <!-- 封面 -->
           <img
             v-show="isVideoShow"
@@ -748,11 +746,7 @@ export default {
 }
 
 .video_container {
-  background-color: #161823;
-  width: 100%;
-  height: 100%;
   position: relative;
-  overflow: hidden;
 }
 .video-player {
   height: 100vh;
@@ -761,7 +755,7 @@ export default {
 
 .product_swiper {
   width: 100vw;
-  position: relative;
+  height: 100vh;
 }
 
 .van_swipe {
@@ -778,20 +772,12 @@ export default {
 }
 
 .video_box {
-  /* position: relative;
+  position: relative;
   top: 5rem;
   background-color: aqua;
   object-fit: fill !important;
   z-index: 999;
-  width: 100%; */
-
-  display: block;
-  min-height: 45%;
-  min-width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 100%;
 }
 
 video {
@@ -813,7 +799,7 @@ video {
 
 .play,
 .platStart {
-  background-color: #161823;
+  background-color: aqua;
   position: absolute;
   margin: auto;
   top: 0;
@@ -912,7 +898,7 @@ video {
   position: relative;
   float: right;
   right: 0.2rem;
-  bottom: 10rem;
+  top: 3rem;
 }
 
 .tools_r_li {
@@ -969,7 +955,7 @@ video {
   z-index: 1001;
   position: relative;
   /* right: 16px; */
-  bottom: 2.8rem;
+  top: 9.5rem;
   text-align: left;
   padding: 0 0.3rem 0.3rem 0.3rem;
   color: #fff;

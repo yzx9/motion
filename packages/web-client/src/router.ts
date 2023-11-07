@@ -1,12 +1,36 @@
 import { useSessionStore } from "@/store"
 import NProgress from "nprogress"
 import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router"
-
+import Home from './views/Home.vue'
 export const QUERY_TO = "to"
 export const QUERY_FROM = "from"
 
 const routes: RouteRecordRaw[] = [
-  { path: "/", component: () => import("./views/Home.vue") },
+  { path: "/", 
+  redirect:'/main'
+   },
+   {
+    path:'/',
+    name:'Home',
+    component:Home,
+    children:[
+      {path:'/main',
+      name:'main',
+      meta:{public:true},
+      component:()=>import('./views/Main.vue')
+    },
+    {path:'/uploadvideo',
+     name:'UploadVideo',
+     meta:{public:true},
+     component:()=>import('./views/UploadVideo.vue')
+    },
+    {path:'/mine',
+    name:'Mine',
+    meta:{public:true},
+    component:()=>import('./views/Mine.vue')
+   },
+    ]
+   },
   {
     path: "/signin",
     meta: { public: true },

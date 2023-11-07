@@ -1,8 +1,12 @@
 package web
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func New() error {
 	fmt.Println("Create, Share, Move with Motion.")
-	return fmt.Errorf("not implement")
+	NewServer()
+	err := server.GetGinEngine().Run(server.addr)
+	return err
 }
